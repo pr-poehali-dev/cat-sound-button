@@ -4,12 +4,12 @@ import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
 const catSounds = [
-  { text: 'meow', url: 'https://cdn.freesound.org/previews/634/634277_2599259-lq.mp3' },
-  { text: 'mrrrow', url: 'https://cdn.freesound.org/previews/634/634276_2599259-lq.mp3' },
-  { text: 'miau', url: 'https://cdn.freesound.org/previews/419/419661_2398403-lq.mp3' },
-  { text: 'nyaa', url: 'https://cdn.freesound.org/previews/221/221522_1015240-lq.mp3' },
-  { text: 'prr-prr', url: 'https://cdn.freesound.org/previews/634/634278_2599259-lq.mp3' },
-  { text: 'mrow', url: 'https://cdn.freesound.org/previews/419/419662_2398403-lq.mp3' }
+  { text: 'meow', url: 'https://actions.google.com/sounds/v1/animals/cat_meow.ogg' },
+  { text: 'mrrrow', url: 'https://actions.google.com/sounds/v1/animals/cat_purr.ogg' },
+  { text: 'miau', url: 'https://actions.google.com/sounds/v1/animals/cat_purr_close.ogg' },
+  { text: 'nyaa', url: 'https://actions.google.com/sounds/v1/animals/cat_meow_short.ogg' },
+  { text: 'prr-prr', url: 'https://actions.google.com/sounds/v1/animals/cat_purr_long.ogg' },
+  { text: 'mrow', url: 'https://actions.google.com/sounds/v1/animals/cat_angry_meow.ogg' }
 ];
 
 const achievements = [
