@@ -1,15 +1,15 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import Icon from '@/components/ui/icon';
 
 const catSounds = [
-  'meow',
-  'mrrrow',
-  'miau',
-  'nyaa',
-  'prr-prr',
-  'mrow'
+  { text: 'meow', frequency: 400, duration: 200 },
+  { text: 'mrrrow', frequency: 300, duration: 400 },
+  { text: 'miau', frequency: 500, duration: 250 },
+  { text: 'nyaa', frequency: 600, duration: 300 },
+  { text: 'prr-prr', frequency: 200, duration: 500 },
+  { text: 'mrow', frequency: 350, duration: 350 }
 ];
 
 const achievements = [
@@ -26,6 +26,14 @@ export default function Index() {
   const [isPressed, setIsPressed] = useState(false);
   const [unlockedAchievements, setUnlockedAchievements] = useState<number[]>([]);
   const [showNewBadge, setShowNewBadge] = useState<number | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+
+  useEffect(() => {
+    audioContextRef.current = new (window.AudioContext || (window as any).webkitAudioContext)();
+    return () => {
+      audioContextRef.current?.close();
+    };
+  }, []);
 
   useEffect(() => {
     const savedClicks = localStorage.getItem('catClicks');
@@ -50,9 +58,37 @@ export default function Index() {
     });
   }, [clicks]);
 
+  const playMeowSound = (frequency: number, duration: number) => {
+    const audioContext = audioContextRef.current;
+    if (!audioContext) return;
+
+    const oscillator = audioContext.createOscillator();
+    const gainNode = audioContext.createGain();
+
+    oscillator.connect(gainNode);
+    gainNode.connect(audioContext.destination);
+
+    oscillator.frequency.setValueAtTime(frequency, audioContext.currentTime);
+    oscillator.frequency.exponentialRampToValueAtTime(
+      frequency * 0.7,
+      audioContext.currentTime + duration / 1000
+    );
+
+    gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(
+      0.01,
+      audioContext.currentTime + duration / 1000
+    );
+
+    oscillator.type = 'sine';
+    oscillator.start(audioContext.currentTime);
+    oscillator.stop(audioContext.currentTime + duration / 1000);
+  };
+
   const handleClick = () => {
     const randomSound = catSounds[Math.floor(Math.random() * catSounds.length)];
-    setCurrentSound(randomSound);
+    setCurrentSound(randomSound.text);
+    playMeowSound(randomSound.frequency, randomSound.duration);
     setClicks(prev => prev + 1);
     setIsPressed(true);
     setTimeout(() => setIsPressed(false), 200);
